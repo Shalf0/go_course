@@ -8,26 +8,21 @@ inefficient versions and the one that uses strings.Join.
 
 package concat
 
-import (
-	"fmt"
-)
-
-func basic(ss []string, s *string) error {
+func basic(ss []string) string {
 	switch len(ss) {
 	case 0:
-		return fmt.Errorf("slice should contain at least one element")
+		return ""
 	case 1:
-		*s = ss[0]
-		return nil
+		return ss[0]
 	}
 
 	sep := " "
-	*s = ss[0]
+	s := ss[0]
 	for _, v := range ss[1:] {
-		*s += sep + v
+		s += sep + v
 	}
 
-	return nil
+	return s
 }
 
 func custom(ss []string, sep string) string {

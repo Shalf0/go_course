@@ -10,7 +10,6 @@ func TestBasic(t *testing.T) {
 	tests := []struct {
 		name    string
 		ss      []string
-		s       string
 		want    string
 		wantErr bool
 	}{
@@ -27,12 +26,9 @@ func TestBasic(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := basic(tt.ss, &tt.s)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("basic() error = %v", err)
-			}
-			if tt.s != tt.want {
-				t.Errorf("got: %s want: %s", tt.s, tt.want)
+			got := basic(tt.ss)
+			if got != tt.want {
+				t.Errorf("got: %s want: %s", got, tt.want)
 			}
 		})
 	}
@@ -93,12 +89,10 @@ func BenchmarkBasic(b *testing.B) {
 				ss = append(ss, "1")
 			}
 
-			var s string
 			b.ResetTimer()
 
 			for i := 0; i < b.N; i++ {
-				// Надеюсь в бэнчмарке не обязательно хэндлить каждую error :)
-				basic(ss, &s)
+				basic(ss)
 			}
 		})
 	}
