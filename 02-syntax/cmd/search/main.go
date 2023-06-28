@@ -55,3 +55,18 @@ func main() {
 		fmt.Printf("URL: %s, TITLE: %s, BODY: %s\n", v.URL, v.Title, v.Body)
 	}
 }
+
+// testScanner shows how an interface can be used.
+func testScanner(links []string, c crawler.Interface) []crawler.Document {
+	var dd []crawler.Document
+	for _, v := range links {
+		d, err := c.Scan(v, 2)
+		if err != nil {
+			log.Printf("Scan() err: %v", err)
+			continue
+		}
+		dd = append(dd, d...)
+	}
+
+	return dd
+}

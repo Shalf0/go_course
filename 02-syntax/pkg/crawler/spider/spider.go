@@ -37,6 +37,11 @@ func (s *Spider) Scan(url string, depth int) (data []crawler.Document, err error
 	return data, nil
 }
 
+func (s *Spider) BatchScan(urls []string, depth int, workers int) (<-chan crawler.Document, <-chan error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 // parse рекурсивно обходит ссылки на странице, переданной в url.
 // Глубина рекурсии задаётся в depth.
 // Каждая найденная ссылка записывается в ассоциативный массив
