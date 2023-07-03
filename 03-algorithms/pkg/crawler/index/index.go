@@ -4,15 +4,17 @@ import (
 	"strings"
 )
 
-func Add(s string, id int, i map[string][]int) {
+// Update adds unique id to key in a provided index.
+// If id is present in key, no value is added.
+func Update(s string, id int, idx map[string][]int) {
 	for _, word := range strings.Split(s, " ") {
-		if dd, ok := i[word]; ok {
-			if !containInt(dd, id) {
-				i[word] = append(i[word], id)
+		if dd, ok := idx[word]; ok {
+			if containInt(dd, id) {
+				continue
 			}
-			continue
 		}
-		i[word] = append(i[word], id)
+
+		idx[word] = append(idx[word], id)
 	}
 }
 

@@ -5,8 +5,14 @@ package crawler
 
 // Interface определяет контракт поискового робота.
 type Interface interface {
-	Scan(url string, depth int) ([]Document, error)
-	BatchScan(urls []string, depth int, workers int) (<-chan Document, <-chan error)
+	Scan(url string, depth int) (Resource, error)
+}
+
+// Resource - scanned and indexed resource.
+type Resource struct {
+	Name string
+	Docs []Document
+	Idx  map[string][]int
 }
 
 // Document - документ, веб-страница, полученная поисковым роботом.

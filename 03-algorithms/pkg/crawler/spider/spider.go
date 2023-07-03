@@ -1,5 +1,5 @@
 // Package spider реализует сканер содержимого веб-сайтов.
-// Пакет позволяет получить список ссылок и заголовков страниц внутри веб-сайта по его URL.
+// Пакет позволяет получить список ссылок и заголовков страниц внутри веб-сайта по его WebResource.
 package spider
 
 import (
@@ -12,31 +12,23 @@ import (
 )
 
 // Spider - служба поискового робота.
-type Spider struct {
-	Links []Link
-}
-
-type Link struct {
-	Name string
-	Docs []crawler.Document
-	Idx  map[string][]int
-}
+type Spider struct{}
 
 // New - констрктор службы поискового робота.
 func New() *Spider {
 	return &Spider{}
 }
 
-// Scan осуществляет рекурсивный обход ссылок сайта, указанного в URL,
+// Scan осуществляет рекурсивный обход ссылок сайта, указанного в url,
 // с учётом глубины перехода по ссылкам, переданной в depth.
-func (s *Spider) Scan(url string, depth int) (Link, error) {
+func (s *Spider) Scan(url string, depth int) (crawler.Resource, error) {
 	pages := make(map[string]string)
 	err := parse(url, url, depth, pages)
 	if err != nil {
-		return Link{}, err
+		return crawler.Resource{}, err
 	}
 
-	linkData := Link{
+	res := crawler.Resource{
 		Name: url,
 		Docs: []crawler.Document{},
 		Idx:  make(map[string][]int),
@@ -44,23 +36,17 @@ func (s *Spider) Scan(url string, depth int) (Link, error) {
 
 	id := 0
 	for url, title := range pages {
-		item := crawler.Document{
+		res.Docs = append(res.Docs, crawler.Document{
 			ID:    id,
 			URL:   url,
 			Title: title,
-		}
-		linkData.Docs = append(linkData.Docs, item)
-		index.Add(title, id, linkData.Idx)
+		})
+		index.Update(title, id, res.Idx)
 
 		id++
 	}
 
-	return linkData, nil
-}
-
-func (s *Spider) BatchScan(urls []string, depth int, workers int) (<-chan crawler.Document, <-chan error) {
-	//TODO implement me
-	panic("implement me")
+	return res, nil
 }
 
 // parse рекурсивно обходит ссылки на странице, переданной в url.
